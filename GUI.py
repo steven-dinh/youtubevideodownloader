@@ -1,4 +1,4 @@
-from pytube import YouTube
+import yt_dlp
 import tkinter as tk
 from tkinter import messagebox
 #functions
@@ -19,10 +19,10 @@ def getEntry(entryName, updateLabel):
         else:
             updateLabel.config(text=f"Current url: {entry}")
         try:
-            yt = YouTube(entry)
-            videoTitleLabel.config(text=f"Video Title: {yt.title}")
+
+            videoTitleLabel.config(text=f"Video Title: {}")
         except Exception as e:
-            messagebox.showerror('Error', 'Failed to fetch video')
+            messagebox.showerror('Error', f'Failed to fetch video:\n{str(e)}')
 
 
 root = tk.Tk()
