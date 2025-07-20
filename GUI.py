@@ -10,7 +10,7 @@ def properUrl(url):
         'https://youtu.be/',
         'https://m.youtube.com/watch?v='
     ]
-    if url.startswith(urlFormats):
+    if (url.startswith(validUrl) for validUrl in urlFormats):
         return True
     else:
         messagebox.showerror('Error', 'Invalid URL')
@@ -27,14 +27,24 @@ def getEntry(entryName, updateLabel):
         try:
 
             ydl_opts = {
-                'format': 'best',  # download best quality video/audio
-                'quiet': True,  # suppress console output
-                'skip_download': True  # just extract info, don't download
+                'format': 'worst',
+                'quiet': True,
+                'skip_download': True
             }
-            with ytdlp.YoutubeDL(ydl_opts) as ydl:
+            with ytdlp.YoutubeDL(ydl_opts) as ydl: #update gui
                 info = ydl.extract_info(entry,download=False)
+                # update title
                 title = info.get('title', 'unknown title')
                 videoTitleLabel.config(text=f"Video Title: {title}")
+                # update length
+                length = info.get('duration', 'unknown length')
+                hours = length // 3600
+                minutes = (length % 3600) // 60
+                seconds = length % 60
+                if hours:
+                    videoLengthLabel.config(text=f"Video Length: {hours}:{minutes:02}:{seconds:02}")
+                else:
+                    videoLengthLabel.config(text=f"Video Length: {minutes}:{seconds:02}")
         except Exception as e:
             messagebox.showerror('Error', f'Failed to fetch video:\n{str(e)}')
 
@@ -62,6 +72,8 @@ entryButton.grid(row=1, column=1, sticky='w')
 videoTitleLabel = tk.Label(root, text="Video Title: ")
 videoTitleLabel.grid(row=3, column=0,sticky="w",padx=(10, 0))
 
+videoLengthLabel = tk.Label(root, text="Video Length: ")
+videoLengthLabel.grid(row=4, column=0,sticky="w",padx=(10, 0))
 #selection box
 
 
