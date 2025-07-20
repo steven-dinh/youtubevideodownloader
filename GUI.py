@@ -13,7 +13,11 @@ def properUrl(url):
 def getEntry(entryName, updateLabel):
     entry = entryName.get()
     if properUrl(entry):
-        updateLabel.config(text=f"Current url: {entry}")
+        if len(entry) >= 37:
+            spliced_entry = entry[:37] + "..."
+            updateLabel.config(text=f"Current url: {spliced_entry}")
+        else:
+            updateLabel.config(text=f"Current url: {entry}")
         try:
             yt = YouTube(entry)
             videoTitleLabel.config(text=f"Video Title: {yt.title}")
@@ -24,7 +28,8 @@ def getEntry(entryName, updateLabel):
 root = tk.Tk()
 root.geometry("350x400")
 root.resizable(False, False)
-
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=0)
 root.title("Youtube Video Downloader")
 
 #url part of gui
@@ -32,13 +37,13 @@ enterUrlLabel = tk.Label(root, text="Enter url")
 enterUrlLabel.grid(row=0, column=0)
 
 urlEntry = tk.Entry(root, width=40)
-urlEntry.grid(row=1, column=0, padx=10, pady=5, sticky='w')
+urlEntry.grid(row=1, column=0, padx=(10, 0), sticky='ew')
 
-urlLabel = tk.Label(root, text="Current url: ") # 13
-urlLabel.grid(row=2, column=0, padx=(10, 0), sticky="w")
+urlLabel = tk.Label(root, text="Current url: ", justify='right') # 13
+urlLabel.grid(row=2, column=0, padx=(10, 0), sticky="w",)
 
 entryButton = tk.Button(root, text="Enter", command=lambda: getEntry(urlEntry, urlLabel))
-entryButton.grid(row=1, column=1)
+entryButton.grid(row=1, column=1, sticky='w')
 
 videoTitleLabel = tk.Label(root, text="Video Title: ")
 videoTitleLabel.grid(row=3, column=0,sticky="w",padx=(10, 0))
