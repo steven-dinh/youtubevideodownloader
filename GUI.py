@@ -4,7 +4,13 @@ from tkinter import messagebox
 #functions
 #def
 def properUrl(url):
-    if url.startswith('https://www.youtube.com/watch?v='):
+    urlFormats = [
+        'https://www.youtube.com/watch?v=',
+        'https://youtube.com/watch?v=',
+        'https://youtu.be/',
+        'https://m.youtube.com/watch?v='
+    ]
+    if url.startswith(urlFormats):
         return True
     else:
         messagebox.showerror('Error', 'Invalid URL')
