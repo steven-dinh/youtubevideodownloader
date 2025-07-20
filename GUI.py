@@ -1,4 +1,4 @@
-import yt_dlp
+import yt_dlp as ytdlp
 import tkinter as tk
 from tkinter import messagebox
 #functions
@@ -20,7 +20,15 @@ def getEntry(entryName, updateLabel):
             updateLabel.config(text=f"Current url: {entry}")
         try:
 
-            videoTitleLabel.config(text=f"Video Title: {}")
+            ydl_opts = {
+                'format': 'best',  # download best quality video/audio
+                'quiet': True,  # suppress console output
+                'skip_download': True  # just extract info, don't download
+            }
+            with ytdlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(entry,download=False)
+                title = info.get('title', 'unknown title')
+                videoTitleLabel.config(text=f"Video Title: {title}")
         except Exception as e:
             messagebox.showerror('Error', f'Failed to fetch video:\n{str(e)}')
 
