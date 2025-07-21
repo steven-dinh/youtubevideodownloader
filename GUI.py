@@ -10,13 +10,13 @@ def properUrl(url):
         'https://youtu.be/',
         'https://m.youtube.com/watch?v='
     ]
-    if (url.startswith(validUrl) for validUrl in urlFormats):
+    if any(url.startswith(validUrl) for validUrl in urlFormats):
         return True
     else:
         messagebox.showerror('Error', 'Invalid URL')
         return False
 
-def getEntry(entryName, updateLabel):
+def getURLEntry(entryName, updateLabel):
     entry = entryName.get()
     if properUrl(entry):
         if len(entry) >= 37:
@@ -66,7 +66,7 @@ urlEntry.grid(row=1, column=0, padx=(10, 0), sticky='ew')
 urlLabel = tk.Label(root, text="Current url: ", justify='right') # 13
 urlLabel.grid(row=2, column=0, padx=(10, 0), sticky="w",)
 
-entryButton = tk.Button(root, text="Enter", command=lambda: getEntry(urlEntry, urlLabel))
+entryButton = tk.Button(root, text="Enter", command=lambda: getURLEntry(urlEntry, urlLabel))
 entryButton.grid(row=1, column=1, sticky='w')
 
 videoTitleLabel = tk.Label(root, text="Video Title: ")
@@ -74,7 +74,18 @@ videoTitleLabel.grid(row=3, column=0,sticky="w",padx=(10, 0))
 
 videoLengthLabel = tk.Label(root, text="Video Length: ")
 videoLengthLabel.grid(row=4, column=0,sticky="w",padx=(10, 0))
-#selection box
 
+#selection
 
+#video quality
+qualityLabel = tk.Label(root, text="Select Resolution: ")
+qualityLabel.grid(row=6, column=0,sticky="w",padx=(10, 0))
+
+resolutions = ['144p','480p','720p','1080p']
+selectedResolution = tk.StringVar(value=resolutions[0])
+
+qualityDropdown = tk.OptionMenu(root, selectedResolution, *resolutions)
+qualityDropdown.grid(row=7, column=0,sticky="w",padx=(10, 0))
+
+#main
 root.mainloop()
