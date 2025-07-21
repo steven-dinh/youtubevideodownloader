@@ -4,7 +4,6 @@ from tkinter import messagebox, filedialog
 
 
 #functions
-#def
 def properUrl(url):
     urlFormats = [
         'https://www.youtube.com/watch?v=',
@@ -55,20 +54,29 @@ def onFormatChange(*args):
     if formating == 'Video':
         videoResolutionLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
         videoResolutionDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
+        videoQualityLabel.grid(row=10, column=0, sticky="w", padx=(10, 0))
+        videoQualityDropdown.grid(row=11, column=0, sticky="w", padx=(10, 0))
+
         audioQualityLabel.grid_remove()
         audioQualityDropdown.grid_remove()
     if formating == 'MP3':
         audioQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
         audioQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
+
+        #remove lingering gui
         videoResolutionLabel.grid_remove()
         videoResolutionDropdown.grid_remove()
+        videoQualityLabel.grid_remove()
+        videoQualityDropdown.grid_remove()
     if formating == '':
         audioQualityLabel.grid_remove()
         audioQualityDropdown.grid_remove()
         videoResolutionLabel.grid_remove()
         videoResolutionDropdown.grid_remove()
+        videoQualityLabel.grid_remove()
+        videoQualityDropdown.grid_remove()
 
-def onvideoResolutionChange(*args):
+def onVideoResolutionChange(*args):
     selected = selectedResolution.get()
     videoResolutionLabel.config(text=f'Selected Resolution: {selected}')
     ydl_opts = {
@@ -76,7 +84,11 @@ def onvideoResolutionChange(*args):
         'quiet': True,
         'skip_download': True
     }
-    with ytdlp.YoutubeDL(ydl_opts) as ydl:
+    #with ytdlp.YoutubeDL(ydl_opts) as ydl:
+
+def onVideoQualityChange(*args):
+    selected = selectedVideoQuality.get()
+    videoQualityLabel.config(text=f'Selected Quality: {selected}')
 
 def onAudioQualityChange(*args):
     selected = selectedAudioQuality.get()
@@ -126,20 +138,29 @@ formatDropdown = tk.OptionMenu(root, selectedFormat, *formatOptions)
 formatDropdown.grid(row=7, column=0,sticky="w",padx=(10, 0))
 
 selectedFormat.trace_add('write', onFormatChange)
+#--VIDEO--
 #video quality
 videoResolutionLabel = tk.Label(root, text="Selected Resolution: ")
 resolutions = ['','144p','480p','720p','1080p']
 selectedResolution = tk.StringVar(value=resolutions[0])
 videoResolutionDropdown = tk.OptionMenu(root, selectedResolution, *resolutions)
 
-#bitrate quality
+selectedResolution.trace_add('write', onVideoResolutionChange)
+#video bitrate quality
 
+videoQualityLabel = tk.Label(root, text="Selected Video Quality: ")
+videoQualityOptions = ['','best','worst']
+selectedVideoQuality = tk.StringVar(value=videoQualityOptions[0])
+videoQualityDropdown = tk.OptionMenu(root, selectedVideoQuality, *videoQualityOptions)
 
+selectedVideoQuality.trace_add('write',onVideoQualityChange)
 
-selectedResolution.trace_add('write', onvideoResolutionChange)
 #video size
 videoSizeLabel = tk.Label(root, text="Video Size: ")
 
+#----------
+
+#--AUDIO--
 #mp3 quality
 audioQualityLabel = tk.Label(root, text="Selected Audio Quality: ")
 audioQualities = ['','128','192','320']
@@ -152,8 +173,8 @@ selectedAudioQuality.trace_add('write', onAudioQualityChange)
 folderDirectoryLabel = tk.Label(root, text="Select Install Directory: ")
 browseFoldersButton = tk.Button(root,text='BROWSE', command=lambda: selectDownloadDirectory())
 
-folderDirectoryLabel.grid(row=12, column=0,sticky="w",padx=(10, 0))
-browseFoldersButton.grid(row=13, column=0,sticky="w",padx=(10, 0))
+folderDirectoryLabel.grid(row=13, column=0,sticky="w",padx=(10, 0))
+browseFoldersButton.grid(row=14, column=0,sticky="w",padx=(10, 0))
 
 #download
 
