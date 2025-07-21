@@ -48,11 +48,6 @@ def getURLEntry(entryName, updateLabel):
         except Exception as e:
             messagebox.showerror('Error', f'Failed to fetch video:\n{str(e)}')
 
-def getDropdownEntry(entryName, updateLabel):
-    entry = entryName.get()
-    if updateLabel == qualityLabel:
-        updateLabel.config(text=f'Selected Resolution: {entry}')
-
 def onFormatChange(*args):
     Format = selectedFormat.get()
     if Format == 'Video':
