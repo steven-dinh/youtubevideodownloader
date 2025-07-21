@@ -71,7 +71,7 @@ def onFormatChange(*args):
         videoSizeLabel.grid(row=12, column=0, sticky="w", padx=(10, 0))
 
         removeAudioGui()
-    if formating == 'MP3':
+    if formating == 'Audio Only':
         audioQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
         audioQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
         removeVideoGui()
@@ -182,11 +182,12 @@ def downloadFile():
                 'merge_output_format': None
             }
 
-        elif formating == 'MP3' and selectedAudioQuality.get():
+        elif formating == 'Audio Only' and selectedAudioQuality.get():
             ydl_opts = {
                 'format': 'bestaudio[ext=m4a]/bestaudio[ext=webm]/bestaudio',
                 'outtmpl': f'{folder}/%(title)s.%(ext)s',
-                'noplaylist': True
+                'noplaylist': True,
+                'postprocessors': []
             }
 
         else:
@@ -232,7 +233,7 @@ videoLengthLabel.grid(row=4, column=0,sticky="w",padx=(10, 0))
 #select format
 formatLabel = tk.Label(root, text="Select Format")
 formatLabel.grid(row=6, column=0,sticky="w",padx=(10, 0))
-formatOptions = ['','Video','MP3']
+formatOptions = ['','Video','Audio Only']
 selectedFormat = tk.StringVar(value=formatOptions[0])
 formatDropdown = tk.OptionMenu(root, selectedFormat, *formatOptions)
 formatDropdown.grid(row=7, column=0,sticky="w",padx=(10, 0))
@@ -261,7 +262,7 @@ videoSizeLabel = tk.Label(root, text="Video Size: ")
 #----------
 
 #--AUDIO--
-#mp3 quality
+#Audio Only quality
 audioQualityLabel = tk.Label(root, text="Selected Audio Quality: ")
 audioQualities = ['','128','192','320']
 selectedAudioQuality = tk.StringVar(value=audioQualities[0])
