@@ -53,24 +53,30 @@ def getURLEntry(entryName, updateLabel):
 def onFormatChange(*args):
     formating = selectedFormat.get()
     if formating == 'Video':
-        videoQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
-        videoQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
+        videoResolutionLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
+        videoResolutionDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
         audioQualityLabel.grid_remove()
         audioQualityDropdown.grid_remove()
     if formating == 'MP3':
         audioQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
         audioQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
-        videoQualityLabel.grid_remove()
-        videoQualityDropdown.grid_remove()
+        videoResolutionLabel.grid_remove()
+        videoResolutionDropdown.grid_remove()
     if formating == '':
         audioQualityLabel.grid_remove()
         audioQualityDropdown.grid_remove()
-        videoQualityLabel.grid_remove()
-        videoQualityDropdown.grid_remove()
+        videoResolutionLabel.grid_remove()
+        videoResolutionDropdown.grid_remove()
 
-def onVideoQualityChange(*args):
+def onvideoResolutionChange(*args):
     selected = selectedResolution.get()
-    videoQualityLabel.config(text=f'Selected Resolution: {selected}')
+    videoResolutionLabel.config(text=f'Selected Resolution: {selected}')
+    ydl_opts = {
+        'format': 'worst',
+        'quiet': True,
+        'skip_download': True
+    }
+    with ytdlp.YoutubeDL(ydl_opts) as ydl:
 
 def onAudioQualityChange(*args):
     selected = selectedAudioQuality.get()
@@ -82,6 +88,7 @@ def selectDownloadDirectory():
     if folder:
         folderDirectoryLabel.config(text=f"Selected Directory: {folder}")
 
+#GUI
 root = tk.Tk()
 root.geometry("350x400")
 root.resizable(False, False)
@@ -120,12 +127,18 @@ formatDropdown.grid(row=7, column=0,sticky="w",padx=(10, 0))
 
 selectedFormat.trace_add('write', onFormatChange)
 #video quality
-videoQualityLabel = tk.Label(root, text="Selected Resolution: ")
+videoResolutionLabel = tk.Label(root, text="Selected Resolution: ")
 resolutions = ['','144p','480p','720p','1080p']
 selectedResolution = tk.StringVar(value=resolutions[0])
-videoQualityDropdown = tk.OptionMenu(root, selectedResolution, *resolutions)
+videoResolutionDropdown = tk.OptionMenu(root, selectedResolution, *resolutions)
 
-selectedResolution.trace_add('write', onVideoQualityChange)
+#bitrate quality
+
+
+
+selectedResolution.trace_add('write', onvideoResolutionChange)
+#video size
+videoSizeLabel = tk.Label(root, text="Video Size: ")
 
 #mp3 quality
 audioQualityLabel = tk.Label(root, text="Selected Audio Quality: ")
@@ -141,5 +154,9 @@ browseFoldersButton = tk.Button(root,text='BROWSE', command=lambda: selectDownlo
 
 folderDirectoryLabel.grid(row=12, column=0,sticky="w",padx=(10, 0))
 browseFoldersButton.grid(row=13, column=0,sticky="w",padx=(10, 0))
+
+#download
+
+
 #main
 root.mainloop()
