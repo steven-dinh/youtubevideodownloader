@@ -270,7 +270,7 @@ audioQualityDropdown = tk.OptionMenu(root, selectedAudioQuality, *audioQualities
 
 selectedAudioQuality.trace_add('write', onAudioQualityChange)
 
-#select folder directory
+#select the folder directory
 folderDirectoryLabel = tk.Label(root, text="Select Install Directory: ")
 browseFoldersButton = tk.Button(root,text='BROWSE', command=lambda: selectDownloadDirectory())
 selectedDownloadDirectory = tk.StringVar(value='')
