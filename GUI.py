@@ -49,6 +49,12 @@ def getURLEntry(entryName, updateLabel):
         except Exception as e:
             messagebox.showerror('Error', f'Failed to fetch video:\n{str(e)}')
 
+def removeVideoGui():
+    videoResolutionLabel.grid_remove()
+    videoResolutionDropdown.grid_remove()
+    videoQualityLabel.grid_remove()
+    videoQualityDropdown.grid_remove()
+
 def onFormatChange(*args):
     formating = selectedFormat.get()
     if formating == 'Video':
@@ -62,19 +68,11 @@ def onFormatChange(*args):
     if formating == 'MP3':
         audioQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
         audioQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
-
-        #remove lingering gui
-        videoResolutionLabel.grid_remove()
-        videoResolutionDropdown.grid_remove()
-        videoQualityLabel.grid_remove()
-        videoQualityDropdown.grid_remove()
+        removeVideoGui()
     if formating == '':
         audioQualityLabel.grid_remove()
         audioQualityDropdown.grid_remove()
-        videoResolutionLabel.grid_remove()
-        videoResolutionDropdown.grid_remove()
-        videoQualityLabel.grid_remove()
-        videoQualityDropdown.grid_remove()
+        removeVideoGui()
 
 def onVideoResolutionChange(*args):
     selected = selectedResolution.get()
