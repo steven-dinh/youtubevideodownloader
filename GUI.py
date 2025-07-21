@@ -156,7 +156,49 @@ def selectDownloadDirectory():
     folder = filedialog.askdirectory()
     if folder:
         folderDirectoryLabel.config(text=f"Selected Directory: {folder}")
+        selectedDownloadDirectory.set(folder)
 
+def downloadFile():
+    url = currentUrl.get()
+    formating = selectedFormat.get()
+
+    folder = selectedDownloadDirectory.get()
+
+    if not url or not formating or folder == "":
+        messagebox.showerror("Error", "Please complete all required fields.")
+        return
+
+    try:
+        if formating == 'Video' and selectedResolution.get() and selectedVideoQuality.get():
+            reso = int(selectedResolution.get().replace("p", ""))
+            quality = selectedVideoQuality.get()
+
+            format_selector = f"{quality}[height<={reso}][vcodec!=none][acodec!=none]"
+
+            ydl_opts = {
+                'format': format_selector,
+                'outtmpl': f'{folder}/%(title)s.%(ext)s',
+                'noplaylist': True,
+                'merge_output_format': None
+            }
+
+        elif formating == 'MP3' and selectedAudioQuality.get():
+            ydl_opts = {
+                'format': 'bestaudio[ext=m4a]/bestaudio[ext=webm]/bestaudio',
+                'outtmpl': f'{folder}/%(title)s.%(ext)s',
+                'noplaylist': True
+            }
+
+        else:
+            messagebox.showerror("Error", "Please select appropriate quality options.")
+            return
+
+        with ytdlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+            messagebox.showinfo("Success", "Download completed!")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Download failed:\n{str(e)}")
 #GUI
 root = tk.Tk()
 root.geometry("350x400")
@@ -230,12 +272,14 @@ selectedAudioQuality.trace_add('write', onAudioQualityChange)
 #select folder directory
 folderDirectoryLabel = tk.Label(root, text="Select Install Directory: ")
 browseFoldersButton = tk.Button(root,text='BROWSE', command=lambda: selectDownloadDirectory())
+selectedDownloadDirectory = tk.StringVar(value='')
+
 
 folderDirectoryLabel.grid(row=13, column=0,sticky="w",padx=(10, 0))
 browseFoldersButton.grid(row=14, column=0,sticky="w",padx=(10, 0))
 
 #download
-
-
+downloadButton = tk.Button(root, text='DOWNLOAD', command=lambda: downloadFile())
+downloadButton.grid(row=15, column=0,sticky="w",padx=(10, 0))
 #main
 root.mainloop()
