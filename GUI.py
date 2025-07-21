@@ -55,14 +55,18 @@ def onFormatChange(*args):
     if formating == 'Video':
         videoQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
         videoQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
-    elif formating == 'Audio':
-        audioQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
-        audioQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
-    else:
-        videoQualityLabel.grid_remove()
-        videoQualityDropdown.grid_remove()
         audioQualityLabel.grid_remove()
         audioQualityDropdown.grid_remove()
+    if formating == 'MP3':
+        audioQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
+        audioQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
+        videoQualityLabel.grid_remove()
+        videoQualityDropdown.grid_remove()
+    if formating == '':
+        audioQualityLabel.grid_remove()
+        audioQualityDropdown.grid_remove()
+        videoQualityLabel.grid_remove()
+        videoQualityDropdown.grid_remove()
 
 def onVideoQualityChange(*args):
     selected = selectedResolution.get()
