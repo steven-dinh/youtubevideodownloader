@@ -55,6 +55,10 @@ def removeVideoGui():
     videoQualityLabel.grid_remove()
     videoQualityDropdown.grid_remove()
 
+def removeAudioGui():
+    audioQualityLabel.grid_remove()
+    audioQualityDropdown.grid_remove()
+
 def onFormatChange(*args):
     formating = selectedFormat.get()
     if formating == 'Video':
@@ -63,15 +67,13 @@ def onFormatChange(*args):
         videoQualityLabel.grid(row=10, column=0, sticky="w", padx=(10, 0))
         videoQualityDropdown.grid(row=11, column=0, sticky="w", padx=(10, 0))
 
-        audioQualityLabel.grid_remove()
-        audioQualityDropdown.grid_remove()
+        removeAudioGui()
     if formating == 'MP3':
         audioQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
         audioQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
         removeVideoGui()
     if formating == '':
-        audioQualityLabel.grid_remove()
-        audioQualityDropdown.grid_remove()
+        removeAudioGui()
         removeVideoGui()
 
 def onVideoResolutionChange(*args):
