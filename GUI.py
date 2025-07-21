@@ -1,6 +1,8 @@
 import yt_dlp as ytdlp
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
+
+
 #functions
 #def
 def properUrl(url):
@@ -65,6 +67,12 @@ def onAudioQualityChange(*args):
     selected = selectedAudioQuality.get()
     audioQualityLabel.config(text=f'Selected Audio Quality: {selected}')
 
+
+def selectDownloadDirectory():
+    folder = filedialog.askdirectory()
+    if folder:
+        folderDirectoryLabel.config(text=f"Selected Directory: {folder}")
+
 root = tk.Tk()
 root.geometry("350x400")
 root.resizable(False, False)
@@ -117,5 +125,12 @@ selectedAudioQuality = tk.StringVar(value=audioQualities[0])
 audioQualityDropdown = tk.OptionMenu(root, selectedAudioQuality, *audioQualities)
 
 selectedAudioQuality.trace_add('write', onAudioQualityChange)
+
+#select folder directory
+folderDirectoryLabel = tk.Label(root, text="Select Install Directory: ")
+browseFoldersButton = tk.Button(root,text='BROWSE', command=lambda: selectDownloadDirectory())
+
+folderDirectoryLabel.grid(row=12, column=0,sticky="w",padx=(10, 0))
+browseFoldersButton.grid(row=13, column=0,sticky="w",padx=(10, 0))
 #main
 root.mainloop()
