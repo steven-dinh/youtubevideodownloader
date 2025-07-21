@@ -56,15 +56,15 @@ def getDropdownEntry(entryName, updateLabel):
 def onFormatChange(*args):
     Format = selectedFormat.get()
     if Format == 'Video':
-        qualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
-        qualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
+        videoQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
+        videoQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
     else:
-        qualityLabel.grid_remove()  # hide label
-        qualityDropdown.grid_remove()  # hide dropdown
+        videoQualityLabel.grid_remove()  # hide label
+        videoQualityDropdown.grid_remove()  # hide dropdown
 
 def onQualityChange(*args):
     selected = selectedResolution.get()
-    qualityLabel.config(text=f'Selected Resolution: {selected}')
+    videoQualityLabel.config(text=f'Selected Resolution: {selected}')
 
 root = tk.Tk()
 root.geometry("350x400")
@@ -104,14 +104,14 @@ formatDropdown.grid(row=7, column=0,sticky="w",padx=(10, 0))
 
 selectedFormat.trace_add('write', onFormatChange)
 #video quality
-qualityLabel = tk.Label(root, text="Selected Resolution: ")
+videoQualityLabel = tk.Label(root, text="Selected Resolution: ")
 resolutions = ['','144p','480p','720p','1080p']
 selectedResolution = tk.StringVar(value=resolutions[0])
-qualityDropdown = tk.OptionMenu(root, selectedResolution, *resolutions)
+videoQualityDropdown = tk.OptionMenu(root, selectedResolution, *resolutions)
 
 selectedResolution.trace_add('write', onQualityChange)
 
-
+#mp3 quality
 
 
 #main
