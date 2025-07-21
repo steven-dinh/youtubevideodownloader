@@ -20,6 +20,7 @@ def properUrl(url):
 def getURLEntry(entryName, updateLabel):
     entry = entryName.get()
     if properUrl(entry):
+        currentUrl.set(entry)
         if len(entry) >= 37:
             spliced_entry = entry[:37] + "..."
             updateLabel.config(text=f"Current url: {spliced_entry}")
@@ -76,6 +77,17 @@ def onFormatChange(*args):
         removeAudioGui()
         removeVideoGui()
 
+def updateVideoFileSize():
+    if selectedResolution.get() != '' and selectedVideoQuality.get() != '':
+        url = currentUrl.get()
+        quality = selectedResolution.get()
+        resolution = selectedVideoQuality.get()
+        ytdlp_opts = {
+            'format': f'{quality}video/{quality}',
+            'quiet': True,
+            'postprocessors': [{}]
+        }
+
 def onVideoResolutionChange(*args):
     selected = selectedResolution.get()
     videoResolutionLabel.config(text=f'Selected Resolution: {selected}')
@@ -89,6 +101,7 @@ def onVideoResolutionChange(*args):
 def onVideoQualityChange(*args):
     selected = selectedVideoQuality.get()
     videoQualityLabel.config(text=f'Selected Quality: {selected}')
+
 
 def onAudioQualityChange(*args):
     selected = selectedAudioQuality.get()
@@ -109,6 +122,7 @@ root.grid_columnconfigure(1, weight=0)
 root.title("Youtube Video Downloader")
 
 #url part of gui
+currentUrl = tk.StringVar(value='')
 enterUrlLabel = tk.Label(root, text="Enter url")
 enterUrlLabel.grid(row=0, column=0)
 
