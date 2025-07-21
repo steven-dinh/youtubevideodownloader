@@ -62,9 +62,13 @@ def onFormatChange(*args):
         videoQualityLabel.grid_remove()  # hide label
         videoQualityDropdown.grid_remove()  # hide dropdown
 
-def onQualityChange(*args):
+def onVideoQualityChange(*args):
     selected = selectedResolution.get()
     videoQualityLabel.config(text=f'Selected Resolution: {selected}')
+
+def onAudioQualityChange(*args):
+    selected = selectedAudioQuality.get()
+    audioQualityLabel.config(text=f'Selected Audio Quality: {selected}')
 
 root = tk.Tk()
 root.geometry("350x400")
@@ -109,10 +113,14 @@ resolutions = ['','144p','480p','720p','1080p']
 selectedResolution = tk.StringVar(value=resolutions[0])
 videoQualityDropdown = tk.OptionMenu(root, selectedResolution, *resolutions)
 
-selectedResolution.trace_add('write', onQualityChange)
+selectedResolution.trace_add('write', onVideoQualityChange)
 
 #mp3 quality
+audioQualityLabel = tk.Label(root, text="Selected Audio Quality: ")
+audioQualities = ['','128','192','320']
+selectedAudioQuality = tk.StringVar(value=audioQualities[0])
+audioQualityDropdown = tk.OptionMenu(root, selectedAudioQuality, *audioQualities)
 
-
+selectedAudioQuality.trace_add('write', onAudioQualityChange)
 #main
 root.mainloop()
