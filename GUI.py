@@ -163,7 +163,9 @@ def downloadFile():
     formating = selectedFormat.get()
 
     folder = selectedDownloadDirectory.get()
-
+    audioQualityString = selectedAudioQuality.get()
+    if audioQualityString != "":
+        audioQuality = int(selectedAudioQuality.get())
     if not url or not formating or folder == "":
         messagebox.showerror("Error", "Please complete all required fields.")
         return
@@ -184,7 +186,7 @@ def downloadFile():
 
         elif formating == 'Audio Only' and selectedAudioQuality.get():
             ydl_opts = {
-                'format': 'bestaudio[ext=m4a]/bestaudio[ext=webm]/bestaudio',
+                'format': f"bestaudio[abr<={audioQuality}][ext=m4a]/",
                 'outtmpl': f'{folder}/%(title)s.%(ext)s',
                 'noplaylist': True,
                 'postprocessors': []
@@ -264,7 +266,7 @@ videoSizeLabel = tk.Label(root, text="Video Size: ")
 #--AUDIO--
 #Audio Only quality
 audioQualityLabel = tk.Label(root, text="Selected Audio Quality: ")
-audioQualities = ['','128','192','320']
+audioQualities = ['','48','70','128','160']
 selectedAudioQuality = tk.StringVar(value=audioQualities[0])
 audioQualityDropdown = tk.OptionMenu(root, selectedAudioQuality, *audioQualities)
 
