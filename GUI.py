@@ -91,21 +91,51 @@ def updateVideoFileSize():
                       'format': f'bestvideo[height<={reso_height}]+bestaudio/best[height<={reso_height}]'
                       }
 
-        with ytdlp.YoutubeDL(ytdlp_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
-            formats = info['formats']
+        try:
+            with ytdlp.YoutubeDL(ytdlp_opts) as ydl:
+                info = ydl.extract_info(url, download=False)
+                formats = info['formats']
 
-            targetFormat = ''
-            for format in formats:
-                if format.get('height') == reso_height and format.get('vcodec') != 'none' and format.get('acodec') != 'none':
-                    targetFormat = format
-                    break
-            if targetFormat:
-                size_bytes = targetFormat.get('filesize') or targetFormat.get('filesize_approx')
-                if size_bytes:
-                    size_mb = size_bytes / (1024 * 1024)
+                # Find best video format matching the resolution
+                best_video = None
+                for format in formats:
+                    if format.get('height') == reso_height and format.get('vcodec') != 'none':
+                        if quality == 'best' or best_video is None:
+                            best_video = format
+                        elif quality == 'worst' and (best_video.get('filesize') or best_video.get('filesize_approx', 0)) > (format.get('filesize') or format.get('filesize_approx', 0)):
+                            best_video = format
+
+                # Find best audio format
+                best_audio = None
+                for format in formats:
+                    if format.get('acodec') != 'none' and format.get('vcodec') == 'none':
+                        if best_audio is None:
+                            best_audio = format
+                        elif quality == 'best' and (format.get('tbr') or 0) > (best_audio.get('tbr') or 0):
+                            best_audio = format
+                        elif quality == 'worst' and (format.get('tbr') or 0) < (best_audio.get('tbr') or 0):
+                            best_audio = format
+
+                # Calculate total size
+                total_size_bytes = 0
+
+                if best_video:
+                    video_size = best_video.get('filesize') or best_video.get('filesize_approx', 0)
+                    total_size_bytes += video_size
+
+                if best_audio:
+                    audio_size = best_audio.get('filesize') or best_audio.get('filesize_approx', 0)
+                    total_size_bytes += audio_size
+
+                if total_size_bytes > 0:
+                    size_mb = total_size_bytes / (1024 * 1024)
                     videoSizeLabel.config(text=f"Video Size: {size_mb:.2f} MB")
-            
+                else:
+                    videoSizeLabel.config(text="Video Size: Size unavailable")
+        except Exception as e:
+            videoSizeLabel.config(text="Video Size: Error calculating size")
+            print(f"Error in updateVideoFileSize: {str(e)}")
+
 
 def onVideoResolutionChange(*args):
     selected = selectedResolution.get()
