@@ -55,6 +55,7 @@ def removeVideoGui():
     videoResolutionDropdown.grid_remove()
     videoQualityLabel.grid_remove()
     videoQualityDropdown.grid_remove()
+    videoSizeLabel.grid_remove()
 
 def removeAudioGui():
     audioQualityLabel.grid_remove()
@@ -67,6 +68,7 @@ def onFormatChange(*args):
         videoResolutionDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
         videoQualityLabel.grid(row=10, column=0, sticky="w", padx=(10, 0))
         videoQualityDropdown.grid(row=11, column=0, sticky="w", padx=(10, 0))
+        videoSizeLabel.grid(row=12, column=0, sticky="w", padx=(10, 0))
 
         removeAudioGui()
     if formating == 'MP3':
@@ -80,28 +82,40 @@ def onFormatChange(*args):
 def updateVideoFileSize():
     if selectedResolution.get() != '' and selectedVideoQuality.get() != '':
         url = currentUrl.get()
-        quality = selectedResolution.get()
-        resolution = selectedVideoQuality.get()
-        ytdlp_opts = {
-            'format': f'{quality}video/{quality}',
-            'quiet': True,
-            'postprocessors': [{}]
-        }
+        resolution = selectedResolution.get()
+        quality = selectedVideoQuality.get()
+        reso_height = int(resolution.replace('p', ''))
+
+        ytdlp_opts = {'quiet': True,
+                      'skip_download': True,
+                      'format': f'bestvideo[height<={reso_height}]+bestaudio/best[height<={reso_height}]'
+                      }
+
+        with ytdlp.YoutubeDL(ytdlp_opts) as ydl:
+            info = ydl.extract_info(url, download=False)
+            formats = info['formats']
+
+            targetFormat = ''
+            for format in formats:
+                if format.get('height') == reso_height and format.get('vcodec') != 'none' and format.get('acodec') != 'none':
+                    targetFormat = format
+                    break
+            if targetFormat:
+                size_bytes = targetFormat.get('filesize') or targetFormat.get('filesize_approx')
+                if size_bytes:
+                    size_mb = size_bytes / (1024 * 1024)
+                    videoSizeLabel.config(text=f"Video Size: {size_mb:.2f} MB")
+            
 
 def onVideoResolutionChange(*args):
     selected = selectedResolution.get()
     videoResolutionLabel.config(text=f'Selected Resolution: {selected}')
-    ydl_opts = {
-        'format': 'worst',
-        'quiet': True,
-        'skip_download': True
-    }
-    #with ytdlp.YoutubeDL(ydl_opts) as ydl:
+    updateVideoFileSize()
 
 def onVideoQualityChange(*args):
     selected = selectedVideoQuality.get()
     videoQualityLabel.config(text=f'Selected Quality: {selected}')
-
+    updateVideoFileSize()
 
 def onAudioQualityChange(*args):
     selected = selectedAudioQuality.get()
@@ -143,7 +157,7 @@ videoLengthLabel.grid(row=4, column=0,sticky="w",padx=(10, 0))
 
 #selections
 
-#select formate
+#select format
 formatLabel = tk.Label(root, text="Select Format")
 formatLabel.grid(row=6, column=0,sticky="w",padx=(10, 0))
 formatOptions = ['','Video','MP3']
