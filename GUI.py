@@ -48,6 +48,14 @@ def getURLEntry(entryName, updateLabel):
         except Exception as e:
             messagebox.showerror('Error', f'Failed to fetch video:\n{str(e)}')
 
+def getDropdownEntry(entryName, updateLabel):
+    entry = entryName.get()
+    if updateLabel == qualityLabel:
+        updateLabel.config(text=f'Selected Resolution: {entry}')
+
+def onQualityChange(*args):
+    selected = selectedResolution.get()
+    qualityLabel.config(text=f'Selected Resolution: {selected}')
 
 root = tk.Tk()
 root.geometry("350x400")
@@ -75,17 +83,26 @@ videoTitleLabel.grid(row=3, column=0,sticky="w",padx=(10, 0))
 videoLengthLabel = tk.Label(root, text="Video Length: ")
 videoLengthLabel.grid(row=4, column=0,sticky="w",padx=(10, 0))
 
-#selection
+#selections
+
+#select formate
+formatLabel = tk.Label(root, text="Select format")
+formatLabel.grid(row=6, column=0,sticky="w",padx=(10, 0))
+formatOptions = ['','Video','MP3']
+
+formatDropdown = tk.OptionMenu(root, formatOptions, *formatOptions)
+formatDropdown.grid(row=7, column=0,sticky="w",padx=(10, 0))
 
 #video quality
-qualityLabel = tk.Label(root, text="Select Resolution: ")
-qualityLabel.grid(row=6, column=0,sticky="w",padx=(10, 0))
+qualityLabel = tk.Label(root, text="Selected Resolution: ")
+#qualityLabel.grid(row=8, column=0,sticky="w",padx=(10, 0))
 
-resolutions = ['144p','480p','720p','1080p']
+resolutions = ['','144p','480p','720p','1080p']
 selectedResolution = tk.StringVar(value=resolutions[0])
 
 qualityDropdown = tk.OptionMenu(root, selectedResolution, *resolutions)
-qualityDropdown.grid(row=7, column=0,sticky="w",padx=(10, 0))
+#qualityDropdown.grid(row=9, column=0,sticky="w",padx=(10, 0))
 
+selectedResolution.trace_add('write', onQualityChange)
 #main
 root.mainloop()
