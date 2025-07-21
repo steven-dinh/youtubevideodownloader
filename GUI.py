@@ -244,7 +244,7 @@ selectedFormat.trace_add('write', onFormatChange)
 #--VIDEO--
 #video quality
 videoResolutionLabel = tk.Label(root, text="Selected Resolution: ")
-resolutions = ['','144p','480p','720p','1080p']
+resolutions = ['','480p','720p','1080p']
 selectedResolution = tk.StringVar(value=resolutions[0])
 videoResolutionDropdown = tk.OptionMenu(root, selectedResolution, *resolutions)
 
