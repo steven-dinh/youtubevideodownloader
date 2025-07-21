@@ -49,8 +49,8 @@ def getURLEntry(entryName, updateLabel):
             messagebox.showerror('Error', f'Failed to fetch video:\n{str(e)}')
 
 def onFormatChange(*args):
-    Format = selectedFormat.get()
-    if Format == 'Video':
+    formating = selectedFormat.get()
+    if formating == 'Video':
         videoQualityLabel.grid(row=8, column=0, sticky="w", padx=(10, 0))
         videoQualityDropdown.grid(row=9, column=0, sticky="w", padx=(10, 0))
     else:
